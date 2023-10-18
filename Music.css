@@ -70,7 +70,7 @@
     border-radius: 50%;
     background-color: #333;
     background-size: cover;
-    margin: auto;
+    background-position: center; /* x truoc y sau*/
   }
   .control {
     display: flex;
@@ -171,5 +171,7 @@
     color: white;
     font-size: 18px;
   }
-  
+  .btn:active{
+    color:var(--primary-color)
+  }
   

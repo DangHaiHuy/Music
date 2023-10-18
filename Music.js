@@ -1,6 +1,15 @@
 const $=document.querySelector.bind(document)
 const $$=document.querySelectorAll.bind(document)
 const progress=$('#progress')
+const nextBtn=$('.btn-next')
+const backBtn=$('.btn-prev')
+const resetBtn=$('.btn-repeat')
+const randomBtn=$('.btn-random')
+const audio=$('#audio')
+console.log(nextBtn)
+let isReset=false;
+let isRandom=false;
+let random;
 const app={
     currentIndex:0,
     isPlaying:false,
@@ -10,13 +19,18 @@ const app={
         singer:'Ngọt',
         path:'./assets/music/Lancuoi.mp3',
         image:'./assets/image/Lancuoi.jpg',
-        
     },
     {
         name:'Liệu giờ - Beat',
         singer:'2T x Venn',
         path:"./assets/music/LieugioBeat.mp3",
         image:'./assets/image/LieugioBeat.jpg'
+    },
+    {
+        name:'Test Btn',
+        singer:'None',
+        path:'./assets/music/TestBtn.mp3',
+        image:'./assets/image/photo-1444703686981-a3abbc4d4fe3.jpg'
     }
     ],
     render:function(){
@@ -38,8 +52,7 @@ const app={
     },
     handleEvents:function(){
         const cd=$('.cd')
-        const cdwidth=cd.offsetWidth;
-        const audio=$('#audio')
+        const cdwidth=cd.offsetWidth
         const toggle=$('.btn-toggle-play')
         const player=$('.player')
         const playerplaying=$('.player.playing')
@@ -89,10 +102,49 @@ const app={
             let seekTime=audio.duration/100*e.target.value;
             audio.currentTime=seekTime         
         }
+        nextBtn.onclick=function(){
+            app.currentIndex++
+            if(app.currentIndex==app.songs.length)  app.currentIndex=0;
+            app.loadCurrentSong()
+            audio.play()
+        }
+        backBtn.onclick=function(){
+            app.currentIndex--
+            if(app.currentIndex<0)  app.currentIndex=app.songs.length-1;
+            app.loadCurrentSong()
+            audio.play()
+        }
+        resetBtn.onclick=function(){
+            resetBtn.classList.toggle('active')
+            if(isReset===false){
+                isReset=true;
+                randomBtn.classList.remove('active')
+                isRandom=false
+                app.repeatSong();
+            }
+            else{
+                isReset=false;
+                app.stopSong();
+            }
+        }
+        randomBtn.onclick=function(){
+            randomBtn.classList.toggle('active')
+            if(isRandom===false){
+                isRandom=true;
+                resetBtn.classList.remove('active')
+                isReset=false;
+                app.randomSong();
+            }
+            else{
+                isRandom=false;
+                app.stopSong();
+            }
+        }
     },
     findCurrentSong:function(){
         Object.defineProperty(this,'currentSong',{
             get:function(){
+                console.log('test')
                 return this.songs[this.currentIndex]
             }//value: this.songs[this.currentIndex]
         })
@@ -108,6 +160,7 @@ const app={
     loadTime(){
         const audio=$('#audio')
         var htmlduration=''
+        console.log(1)
         audio.onloadedmetadata=function(){
             const minutes=Math.floor(audio.duration / 60)
             const seconds=(audio.duration / 60 - minutes)*60
@@ -115,7 +168,30 @@ const app={
             htmlduration=minutes + ':' + seconds
             console.log(htmlduration)
         }
-        
+    },
+    repeatSong(){
+        audio.onended=function(){
+            setTimeout(function(){  
+                audio.play()
+            },1000)
+        }
+    },
+    randomSong(){
+        audio.onended=function(){
+            do{
+                random=Math.floor(Math.random()*app.songs.length)
+                console.log(random)
+            }
+            while(app.currentIndex===random)
+            app.currentIndex=random 
+            app.loadCurrentSong();
+            audio.play()    
+        }
+    },
+    stopSong(){
+        audio.onended=function(){
+            audio.pause()
+        }
     },
     start:function(){
         this.render()
@@ -126,3 +202,5 @@ const app={
     }
 }
 app.start()
+//khi handle mot event bat ki thi se chi goi ham trong event do (khong phải load lai het tat ca), mot số event trong hàm
+// khác có liên quan đến hàm event của thay đổi ví dụ như onloadedmetadata khi audio thay đổi thì sẽ tự gọi lại
