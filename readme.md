@@ -1,3 +1,3 @@
-Vai ca
-
-No i dn
+show me ur op
+wtf
+u can try
