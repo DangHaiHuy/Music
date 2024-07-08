@@ -12,4 +12,4 @@ rung thay la ngap ngung
 
 rung ko bao tin bui gi
 
-chi co che man mua
+dua xuong mot ti, sang trai mot ti
