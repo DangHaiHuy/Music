@@ -13,3 +13,5 @@ rung thay la ngap ngung
 rung ko bao tin bui gi
 
 chi co che man mua
+
+vung ky uc xua ta con nhau
